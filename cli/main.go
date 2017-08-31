@@ -2,8 +2,10 @@ package cli
 
 import (
 	"fmt"
+	"github.com/rrreeeyyy/exporter_proxy/handler"
 	"log"
 	"net/http"
+	"net/http/httputil"
 	"os"
 )
 
@@ -38,14 +40,6 @@ func Start(args []string) {
 	start(config)
 }
 
-func (handler *ExporterHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "%s", handler.to)
-}
-
-type ExporterHandler struct {
-	to string
-}
-
 func start(config *Config) {
 	exporters, err := config.BuildExporters()
 	if err != nil {
@@ -53,9 +47,11 @@ func start(config *Config) {
 	}
 
 	for _, e := range exporters {
-		handler := new(ExporterHandler)
-		handler.to = e.URL.Host
-		http.Handle(*e.Path, handler)
+		handler := new(handler.ExporterHandler)
+		handler.URL = e.URL
+		director := handler.CreateDirector()
+		rproxy := &httputil.ReverseProxy{Director: director}
+		http.Handle(*e.Path, rproxy)
 	}
 
 	err = http.ListenAndServe(*config.Listen, nil)
