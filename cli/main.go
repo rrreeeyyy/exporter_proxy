@@ -2,10 +2,10 @@ package cli
 
 import (
 	"fmt"
-	"github.com/rrreeeyyy/exporter_proxy/handler"
+	"github.com/rrreeeyyy/exporter_proxy/config"
+	"github.com/rrreeeyyy/exporter_proxy/server"
 	"log"
 	"net/http"
-	"net/http/httputil"
 	"os"
 )
 
@@ -27,7 +27,7 @@ func Start(args []string) {
 		log.Fatal("ERROR: option -config is mandatory")
 	}
 
-	config, err := LoadConfigFromYAML(options.Config)
+	config, err := config.LoadConfigFromYAML(options.Config)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -40,21 +40,16 @@ func Start(args []string) {
 	start(config)
 }
 
-func start(config *Config) {
-	exporters, err := config.BuildExporters()
-	if err != nil {
-		log.Fatal(err)
+func start(config *config.Config) {
+	for _, e := range config.ExporterConfigs {
+		proxy, err := server.NewExporterProxy(&e)
+		if err != nil {
+			log.Fatal(err)
+		}
+		http.Handle(*e.Path, proxy)
 	}
 
-	for _, e := range exporters {
-		handler := new(handler.ExporterHandler)
-		handler.URL = e.URL
-		director := handler.CreateDirector()
-		rproxy := &httputil.ReverseProxy{Director: director}
-		http.Handle(*e.Path, rproxy)
-	}
-
-	err = http.ListenAndServe(*config.Listen, nil)
+	err := http.ListenAndServe(*config.Listen, nil)
 	if err != nil {
 		log.Fatal(err)
 	}
