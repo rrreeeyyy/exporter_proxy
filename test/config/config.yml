@@ -1,0 +1,12 @@
+listen: "0.0.0.0:9099"
+
+exporters:
+  expoter_proxy_exporter:
+    url: "http://127.0.0.1:9099/metrics"
+    path: "/exporter_proxy_exporter/metrics"
+  node_exporter:
+    url: "http://node_exporter:9100/metrics"
+    path: "/node_exporter/metrics"
+  mysqld_exporter:
+    url: "http://127.0.0.1:9104/metrics"
+    path: "/mysqld_exporter/metrics"
