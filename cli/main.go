@@ -49,7 +49,10 @@ func start(config *config.Config) {
 		http.Handle(*e.Path, proxy)
 	}
 
-	err := http.ListenAndServe(*config.Listen, nil)
+	listener, err := server.Listen(*config.Listen)
+	defer listener.Close()
+
+	err := server.ServeHTTPAndHandleSignal(http.DefaultServeMux, listener, nil)
 	if err != nil {
 		log.Fatal(err)
 	}
