@@ -1,13 +1,20 @@
 package config
 
 import (
+	"io/ioutil"
+	"time"
+
 	"gopkg.in/go-playground/validator.v9"
 	"gopkg.in/yaml.v2"
-	"io/ioutil"
+)
+
+const (
+	DefaultShutDownTimeout = "10s"
 )
 
 type Config struct {
 	Listen          *string                   `yaml:"listen" validate:"required"`
+	ShutDownTimeout *time.Duration            `yaml:"shutdown_timeout"`
 	ExporterConfigs map[string]ExporterConfig `yaml:"exporters" validate:"required,dive"`
 }
 
@@ -22,7 +29,9 @@ func LoadConfigFromYAML(path string) (*Config, error) {
 		return nil, err
 	}
 
-	c := &Config{}
+	sdt, _ := time.ParseDuration(DefaultShutDownTimeout)
+
+	c := &Config{ShutDownTimeout: &sdt}
 	err = yaml.Unmarshal(data, c)
 	if err != nil {
 		return nil, err

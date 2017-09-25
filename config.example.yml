@@ -1,9 +1,10 @@
-listen: "0.0.0.0:9099"
+listen: "SERVER_STARTER:0.0.0.0:9099"
+shutdown_timeout: "15s"
 
 exporters:
   expoter_proxy_exporter:
     url: "http://127.0.0.1:9099/metrics"
-    path: "/exporter_proxy_exporter/metrics"
+    path: "/exporter_proxy_exporter/metrics80572"
   node_exporter:
     url: "http://127.0.0.1:9100/metrics"
     path: "/node_exporter/metrics"

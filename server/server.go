@@ -10,7 +10,7 @@ import (
 	"time"
 )
 
-func ServeHTTPAndHandleSignal(server http.Server, listener net.Listener, timeout time.Duration) error {
+func ServeHTTPAndHandleSignal(listener net.Listener, server http.Server, timeout time.Duration) error {
 	go func() {
 		server.Serve(listener)
 	}()

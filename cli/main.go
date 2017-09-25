@@ -2,11 +2,13 @@ package cli
 
 import (
 	"fmt"
-	"github.com/rrreeeyyy/exporter_proxy/config"
-	"github.com/rrreeeyyy/exporter_proxy/server"
 	"log"
 	"net/http"
 	"os"
+
+	"github.com/rrreeeyyy/exporter_proxy/config"
+	"github.com/rrreeeyyy/exporter_proxy/listener"
+	"github.com/rrreeeyyy/exporter_proxy/server"
 )
 
 func Start(args []string) {
@@ -49,10 +51,17 @@ func start(config *config.Config) {
 		http.Handle(*e.Path, proxy)
 	}
 
-	listener, err := server.Listen(*config.Listen)
-	defer listener.Close()
+	lsn, err := listener.Listen(*config.Listen)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer lsn.Close()
 
-	err := server.ServeHTTPAndHandleSignal(http.DefaultServeMux, listener, nil)
+	srv := &http.Server{
+		Handler: http.DefaultServeMux,
+	}
+
+	err = server.ServeHTTPAndHandleSignal(lsn, *srv, *config.ShutDownTimeout)
 	if err != nil {
 		log.Fatal(err)
 	}
