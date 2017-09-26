@@ -4,7 +4,7 @@ shutdown_timeout: "15s"
 exporters:
   expoter_proxy_exporter:
     url: "http://127.0.0.1:9099/metrics"
-    path: "/exporter_proxy_exporter/metrics80572"
+    path: "/exporter_proxy_exporter/metrics"
   node_exporter:
     url: "http://127.0.0.1:9100/metrics"
     path: "/node_exporter/metrics"

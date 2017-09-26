@@ -3,14 +3,16 @@ version: '2'
 services:
   exporter_proxy:
     build: ../
-    container_name: docker-exporter-proxy
     ports:
       - "9099:9099"
     links:
       - node_exporter
+      - cadvisor
     volumes:
       - ./config/:/etc/exporter_proxy/:ro
     command: -config /etc/exporter_proxy/config.yml
+    entrypoint: start_server --port 0.0.0.0:9099 -- go-wrapper run
   node_exporter:
     image: prom/node-exporter
-    container_name: docker-node-exporter
+  cadvisor:
+    image: google/cadvisor
