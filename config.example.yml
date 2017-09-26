@@ -1,6 +1,12 @@
 listen: "SERVER_STARTER:0.0.0.0:9099"
 shutdown_timeout: "15s"
 
+access_log:
+  path: "/dev/stdout"
+
+error_log:
+  path: "/dev/stderr"
+
 exporters:
   expoter_proxy_exporter:
     url: "http://127.0.0.1:9099/metrics"

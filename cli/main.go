@@ -42,18 +42,39 @@ func Start(args []string) {
 	start(config)
 }
 
+func openWritableFile(path string) (*os.File, error) {
+	return os.OpenFile(path, os.O_WRONLY|os.O_APPEND|os.O_CREATE, 0644)
+}
+
 func start(config *config.Config) {
+	ef, err := openWritableFile(*config.ErrorLogConfig.Path)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer ef.Close()
+
+	errorLogger := log.New(ef, "", log.LstdFlags)
+	errorLogger.Printf("INFO: ExporterProxy v%s", Version)
+
+	af, err := openWritableFile(*config.AccessLogConfig.Path)
+	if err != nil {
+		errorLogger.Fatal(err)
+	}
+	defer af.Close()
+
+	accessLogger := log.New(af, "", log.LstdFlags)
+
 	for _, e := range config.ExporterConfigs {
-		proxy, err := server.NewExporterProxy(&e)
+		proxy, err := server.NewExporterProxy(&e, accessLogger, errorLogger)
 		if err != nil {
-			log.Fatal(err)
+			errorLogger.Fatal(err)
 		}
-		http.Handle(*e.Path, proxy)
+		http.Handle(*proxy.ServePath, proxy)
 	}
 
 	lsn, err := listener.Listen(*config.Listen)
 	if err != nil {
-		log.Fatal(err)
+		errorLogger.Fatal(err)
 	}
 	defer lsn.Close()
 
@@ -63,6 +84,6 @@ func start(config *config.Config) {
 
 	err = server.ServeHTTPAndHandleSignal(lsn, *srv, *config.ShutDownTimeout)
 	if err != nil {
-		log.Fatal(err)
+		errorLogger.Fatal(err)
 	}
 }
