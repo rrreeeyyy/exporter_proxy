@@ -1,5 +1,13 @@
 listen: "SERVER_STARTER:0.0.0.0:9099"
 
+access_log:
+  path: "/dev/stdout"
+  format: "ltsv"
+  fields: ['time', 'time_nsec', 'status', 'size', 'reqtime_nsec', 'backend', 'path', 'query', 'method']
+
+error_log:
+  path: "/dev/stderr"
+
 exporters:
   expoter_proxy_exporter:
     url: "http://127.0.0.1:9099/metrics"

@@ -2,6 +2,7 @@ package server
 
 import (
 	"fmt"
+	"github.com/rrreeeyyy/exporter_proxy/accesslogger"
 	"github.com/rrreeeyyy/exporter_proxy/config"
 	"log"
 	"net/http"
@@ -13,11 +14,11 @@ import (
 type ExporterProxy struct {
 	ServePath *string
 	Target    *url.URL
-	AccessLog *log.Logger
+	AccessLog accesslogger.AccessLogger
 	*httputil.ReverseProxy
 }
 
-func NewExporterProxy(c *config.ExporterConfig, al *log.Logger, el *log.Logger) (*ExporterProxy, error) {
+func NewExporterProxy(c *config.ExporterConfig, al accesslogger.AccessLogger, el *log.Logger) (*ExporterProxy, error) {
 	target, err := url.Parse(*c.URL)
 	if err != nil {
 		return nil, err
@@ -27,7 +28,7 @@ func NewExporterProxy(c *config.ExporterConfig, al *log.Logger, el *log.Logger) 
 }
 
 func (p *ExporterProxy) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
-	record := AccessLogRecord{}
+	record := accesslogger.AccessLogRecord{}
 	logRW := wrapLogResponseWriter(rw)
 
 	start := time.Now()
@@ -43,7 +44,7 @@ func (p *ExporterProxy) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 		record["path"] = req.URL.Path
 		record["query"] = req.URL.RawQuery
 		record["method"] = req.Method
-		p.AccessLog.Printf("%v", record)
+		p.AccessLog.Log(record)
 	}
 }
 

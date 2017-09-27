@@ -1,14 +1,8 @@
 package server
 
-import(
+import (
 	"net/http"
 )
-
-type AccessLogRecord map[string]string
-
-type AccessLogger interface {
-	Log(AccessLogRecord) error
-}
 
 func wrapLogResponseWriter(rw http.ResponseWriter) logResponseWriterIF {
 	var wrapped logResponseWriterIF

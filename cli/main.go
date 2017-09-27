@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/rrreeeyyy/exporter_proxy/accesslogger"
 	"github.com/rrreeeyyy/exporter_proxy/config"
 	"github.com/rrreeeyyy/exporter_proxy/listener"
 	"github.com/rrreeeyyy/exporter_proxy/server"
@@ -56,13 +57,19 @@ func start(config *config.Config) {
 	errorLogger := log.New(ef, "", log.LstdFlags)
 	errorLogger.Printf("INFO: ExporterProxy v%s", Version)
 
-	af, err := openWritableFile(*config.AccessLogConfig.Path)
-	if err != nil {
-		errorLogger.Fatal(err)
-	}
-	defer af.Close()
+	var accessLogger accesslogger.AccessLogger
+	if config.AccessLogConfig != nil {
+		af, err := openWritableFile(*config.AccessLogConfig.Path)
+		if err != nil {
+			errorLogger.Fatal(err)
+		}
+		defer af.Close()
 
-	accessLogger := log.New(af, "", log.LstdFlags)
+		accessLogger, err = accesslogger.New(*config.AccessLogConfig.Format, af, config.AccessLogConfig.Fields)
+		if err != nil {
+			errorLogger.Fatal(err)
+		}
+	}
 
 	for _, e := range config.ExporterConfigs {
 		proxy, err := server.NewExporterProxy(&e, accessLogger, errorLogger)

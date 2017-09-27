@@ -2,10 +2,12 @@ listen: "SERVER_STARTER:0.0.0.0:9099"
 shutdown_timeout: "15s"
 
 access_log:
-  path: "/dev/stdout"
+  format: 'ltsv'
+  path: './test_access_log'
+  fields: ['time', 'time_nsec', 'status', 'size', 'reqtime_nsec', 'backend', 'path', 'query', 'method']
 
 error_log:
-  path: "/dev/stderr"
+  path: "./test_error_log"
 
 exporters:
   expoter_proxy_exporter:
