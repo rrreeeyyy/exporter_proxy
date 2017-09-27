@@ -4,6 +4,24 @@ Simple reverse proxy for prometheus exporters.
 
 It is useful when it is difficult to open multiple ports on one server.
 
+## Install
+
+### Precompied binaries
+
+Download from https://github.com/rrreeeyyy/exporter_proxy/releases
+
+### Docker
+
+```
+docker pull rrreeeyyy/exporter_proxy
+```
+
+### go get
+
+```
+go get -u github.com/rrreeeyyy/exporter_proxy
+```
+
 ## Usage
 
 ```
