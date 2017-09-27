@@ -9,7 +9,7 @@ build:
 	go build -ldflags "-X main.GitCommit=$(COMMIT)" -o bin/exporter_proxy .
 
 buildx:
-	gox -ldflags "-X main.GitCommit=$(COMMIT)" -output "bin/v$(VERSION)/{{.Dir}}_{{.OS}}_{{.Arch}}_$(VERSION)" -arch "amd64" -os "linux darwin" .
+	gox -ldflags "-X main.GitCommit=$(COMMIT)" -output "bin/v$(VERSION)/{{.Dir}}_{{.OS}}_{{.Arch}}" -arch "amd64" -os "linux darwin" .
 
 lint:
 	golint ${GOFILES_NOVENDOR}
