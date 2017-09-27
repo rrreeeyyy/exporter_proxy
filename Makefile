@@ -1,5 +1,5 @@
 COMMIT = $(shell git describe --always)
-VERSION = $(shell grep Version cmd/exporter_proxy/version.go | sed -E 's/.*"(.+)"$$/\1/')
+VERSION = $(shell grep Version cli/version.go | sed -E 's/.*"(.+)"$$/\1/')
 GOFILES_NOVENDOR = $(shell find . -type f -name '*.go' -not -path "./vendor/*")
 
 default: build
