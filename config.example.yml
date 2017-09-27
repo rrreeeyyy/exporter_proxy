@@ -1,21 +1,32 @@
+# listen: Addr and port to listen (required)
+#   If it has "SERVER_STARTER:" prefix, fd passed by https://github.com/lestrrat/go-server-starter will be used
+# e.g.
+#   127.0.0.1:8080
+#   SERVER_STARTER:0.0.0.0:8080
+#   SERVER_STARTER:/path/to/socket
 listen: "SERVER_STARTER:0.0.0.0:9099"
-shutdown_timeout: "15s"
 
+# access_log (optional)
 access_log:
-  format: 'ltsv'
-  path: './test_access_log'
-  fields: ['time', 'time_nsec', 'status', 'size', 'reqtime_nsec', 'backend', 'path', 'query', 'method']
+  format: "ltsv"
+  path: "/dev/stdout"
+  fields: ["time", "time_nsec", "status", "size", "reqtime_nsec", "backend", "path", "query", "method"]
 
+# error_log (required)
 error_log:
-  path: "./test_error_log"
+  path: "/dev/stderr"
 
+# exporters: The path of exporter_proxy and the URL of the destination exporter
 exporters:
-  expoter_proxy_exporter:
-    url: "http://127.0.0.1:9099/metrics"
-    path: "/exporter_proxy_exporter/metrics"
   node_exporter:
-    url: "http://127.0.0.1:9100/metrics"
     path: "/node_exporter/metrics"
+    url: "http://127.0.0.1:9100/metrics"
   mysqld_exporter:
-    url: "http://127.0.0.1:9104/metrics"
     path: "/mysqld_exporter/metrics"
+    url: "http://127.0.0.1:9104/metrics"
+
+
+# shutdown_timeout: timeout for shutting down HTTP server (optional)
+#   On SIGTERM, exporter_proxy will try to shut down the server gracefully.
+#   If shutdown_timeout is over, the server will be shutted down forcibly.
+shutdown_timeout: 10s
