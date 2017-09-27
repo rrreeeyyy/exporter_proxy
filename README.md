@@ -1,6 +1,7 @@
 # exporter_proxy
 
 Simple reverse proxy for prometheus exporters.
+
 It is useful when it is difficult to open multiple ports on one server.
 
 ## Usage
@@ -24,6 +25,7 @@ exporters:
 ```
 
 When you access `http://exporter_proxy_host:9099/node_exporter/metrics`, returns the metrics collected by `node_exporter`.
+
 And of course, `http://exporter_proxy_host:9099/node_exporter/metrics` returns the metrics collected by` mysqld_exporter`.
 
 The part of your `prometheus.yml` is probably as follows.
@@ -42,8 +44,8 @@ scrape_configs:
 
 ## Configuration
 
-Standard example: https://github.com/rrreeeyyy/exporter_proxy/blob/master/config.example.yml
-For docker example: https://github.com/rrreeeyyy/exporter_proxy/blob/master/example/config/config.yml
+- Standard example: https://github.com/rrreeeyyy/exporter_proxy/blob/master/config.example.yml
+- For docker example: https://github.com/rrreeeyyy/exporter_proxy/blob/master/example/config/config.yml
 
 ## Development
 
