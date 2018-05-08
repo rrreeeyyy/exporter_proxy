@@ -44,7 +44,7 @@ exporters:
 
 When you access `http://exporter_proxy_host:9099/node_exporter/metrics`, returns the metrics collected by `node_exporter`.
 
-And of course, `http://exporter_proxy_host:9099/node_exporter/metrics` returns the metrics collected by` mysqld_exporter`.
+And of course, `http://exporter_proxy_host:9099/mysqld_exporter/metrics` returns the metrics collected by` mysqld_exporter`.
 
 The part of your `prometheus.yml` is probably as follows.
 
