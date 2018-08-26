@@ -4,17 +4,17 @@
 #   127.0.0.1:8080
 #   SERVER_STARTER:0.0.0.0:8080
 #   SERVER_STARTER:/path/to/socket
-listen: "SERVER_STARTER:0.0.0.0:9099"
+listen: "0.0.0.0:9099"
 
 # access_log (optional)
 access_log:
   format: "ltsv"
-  path: "/dev/stdout"
+  path: "./access.log" # optional (default: os.Stdout)
   fields: ["time", "time_nsec", "status", "size", "reqtime_nsec", "backend", "path", "query", "method"]
 
-# error_log (required)
+# error_log (optional)
 error_log:
-  path: "/dev/stderr"
+  path: "./error.log" # default: os.Stderr
 
 # exporters: The path of exporter_proxy and the URL of the destination exporter
 exporters:

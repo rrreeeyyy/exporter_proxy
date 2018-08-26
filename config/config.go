@@ -17,12 +17,12 @@ type Config struct {
 	ShutDownTimeout *time.Duration            `yaml:"shutdown_timeout"`
 	ExporterConfigs map[string]ExporterConfig `yaml:"exporters" validate:"required,dive"`
 	AccessLogConfig *AccessLogConfig          `yaml:"access_log"`
-	ErrorLogConfig  *ErrorLogConfig           `yaml:"error_log" validate:"required,dive"`
+	ErrorLogConfig  *ErrorLogConfig           `yaml:"error_log"`
 }
 
 type AccessLogConfig struct {
 	Format *string  `yaml:"format" validate:"required"`
-	Path   *string  `yaml:"path" validate:"required"`
+	Path   *string  `yaml:"path"`
 	Fields []string `yaml:"fields" validate:"required"`
 }
 
