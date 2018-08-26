@@ -48,26 +48,38 @@ func openWritableFile(path string) (*os.File, error) {
 }
 
 func start(config *config.Config) {
-	ef, err := openWritableFile(*config.ErrorLogConfig.Path)
-	if err != nil {
-		log.Fatal(err)
+	var err error
+	var errorLogger *log.Logger
+	if config.ErrorLogConfig != nil {
+		ef, err := openWritableFile(*config.ErrorLogConfig.Path)
+		if err != nil {
+			log.Fatal(err)
+		}
+		defer ef.Close()
+		errorLogger = log.New(ef, "", log.LstdFlags)
+	} else {
+		errorLogger = log.New(os.Stderr, "", log.LstdFlags)
 	}
-	defer ef.Close()
 
-	errorLogger := log.New(ef, "", log.LstdFlags)
 	errorLogger.Printf("INFO: ExporterProxy v%s", Version)
 
 	var accessLogger accesslogger.AccessLogger
 	if config.AccessLogConfig != nil {
-		af, err := openWritableFile(*config.AccessLogConfig.Path)
-		if err != nil {
-			errorLogger.Fatal(err)
-		}
-		defer af.Close()
-
-		accessLogger, err = accesslogger.New(*config.AccessLogConfig.Format, af, config.AccessLogConfig.Fields)
-		if err != nil {
-			errorLogger.Fatal(err)
+		if config.AccessLogConfig.Path != nil {
+			af, err := openWritableFile(*config.AccessLogConfig.Path)
+			if err != nil {
+				errorLogger.Fatal(err)
+			}
+			defer af.Close()
+			accessLogger, err = accesslogger.New(*config.AccessLogConfig.Format, af, config.AccessLogConfig.Fields)
+			if err != nil {
+				errorLogger.Fatal(err)
+			}
+		} else {
+			accessLogger, err = accesslogger.New(*config.AccessLogConfig.Format, os.Stdout, config.AccessLogConfig.Fields)
+			if err != nil {
+				errorLogger.Fatal(err)
+			}
 		}
 	}
 
