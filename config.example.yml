@@ -6,6 +6,12 @@
 #   SERVER_STARTER:/path/to/socket
 listen: "0.0.0.0:9099"
 
+# enable TLS (optional)
+
+tls:
+  certfile: "/path/to/cert.crt"
+  keyfile: "/path/to/keyfile.key"
+
 # access_log (optional)
 access_log:
   format: "ltsv"

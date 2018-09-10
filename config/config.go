@@ -14,10 +14,16 @@ const (
 
 type Config struct {
 	Listen          *string                   `yaml:"listen" validate:"required"`
+	TLSConfig       *TLSConfig                `yaml:"tls"`
 	ShutDownTimeout *time.Duration            `yaml:"shutdown_timeout"`
 	ExporterConfigs map[string]ExporterConfig `yaml:"exporters" validate:"required,dive"`
 	AccessLogConfig *AccessLogConfig          `yaml:"access_log"`
 	ErrorLogConfig  *ErrorLogConfig           `yaml:"error_log"`
+}
+
+type TLSConfig struct {
+	CertFile *string `yaml:"certfile"`
+	KeyFile  *string `yaml:"keyfile"`
 }
 
 type AccessLogConfig struct {
