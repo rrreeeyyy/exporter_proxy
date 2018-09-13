@@ -101,7 +101,7 @@ func start(config *config.Config) {
 		Handler: http.DefaultServeMux,
 	}
 
-	err = server.ServeHTTPAndHandleSignal(lsn, *srv, *config.ShutDownTimeout)
+	err = server.ServeHTTPAndHandleSignal(lsn, *srv, *config.ShutDownTimeout, *config.TLSConfig)
 	if err != nil {
 		errorLogger.Fatal(err)
 	}

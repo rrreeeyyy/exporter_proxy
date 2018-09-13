@@ -8,12 +8,20 @@ import (
 	"os/signal"
 	"syscall"
 	"time"
+
+	"github.com/rrreeeyyy/exporter_proxy/config"
 )
 
-func ServeHTTPAndHandleSignal(listener net.Listener, server http.Server, timeout time.Duration) error {
-	go func() {
-		server.Serve(listener)
-	}()
+func ServeHTTPAndHandleSignal(listener net.Listener, server http.Server, timeout time.Duration, tlsconfig config.TLSConfig) error {
+	if &tlsconfig != nil {
+		go func() {
+			server.ServeTLS(listener, *tlsconfig.CertFile, *tlsconfig.KeyFile)
+		}()
+	} else {
+		go func() {
+			server.Serve(listener)
+		}()
+	}
 
 	sigCh := make(chan os.Signal, 1)
 	signal.Notify(sigCh, syscall.SIGTERM)
