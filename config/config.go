@@ -22,8 +22,8 @@ type Config struct {
 }
 
 type TLSConfig struct {
-	CertFile *string `yaml:"certfile"`
-	KeyFile  *string `yaml:"keyfile"`
+	CertFile *string `yaml:"certfile" validate:"required"`
+	KeyFile  *string `yaml:"keyfile" validate:"required"`
 }
 
 type AccessLogConfig struct {
