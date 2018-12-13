@@ -13,7 +13,7 @@ import (
 )
 
 func ServeHTTPAndHandleSignal(listener net.Listener, server http.Server, timeout time.Duration, tlsconfig config.TLSConfig) error {
-	if &tlsconfig != nil {
+	if tlsconfig.CertFile != nil && tlsconfig.KeyFile != nil {
 		go func() {
 			server.ServeTLS(listener, *tlsconfig.CertFile, *tlsconfig.KeyFile)
 		}()
