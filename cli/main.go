@@ -30,28 +30,28 @@ func Start(args []string) {
 		log.Fatal("ERROR: option -config is mandatory")
 	}
 
-	config, err := config.LoadConfigFromYAML(options.Config)
+	cfg, err := config.LoadConfigFromYAML(options.Config)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	err = config.Validate()
+	err = cfg.Validate()
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	start(config)
+	start(cfg)
 }
 
 func openWritableFile(path string) (*os.File, error) {
 	return os.OpenFile(path, os.O_WRONLY|os.O_APPEND|os.O_CREATE, 0644)
 }
 
-func start(config *config.Config) {
+func start(cfg *config.Config) {
 	var err error
 	var errorLogger *log.Logger
-	if config.ErrorLogConfig != nil {
-		ef, err := openWritableFile(*config.ErrorLogConfig.Path)
+	if cfg.ErrorLogConfig != nil {
+		ef, err := openWritableFile(*cfg.ErrorLogConfig.Path)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -64,26 +64,26 @@ func start(config *config.Config) {
 	errorLogger.Printf("INFO: ExporterProxy v%s", Version)
 
 	var accessLogger accesslogger.AccessLogger
-	if config.AccessLogConfig != nil {
-		if config.AccessLogConfig.Path != nil {
-			af, err := openWritableFile(*config.AccessLogConfig.Path)
+	if cfg.AccessLogConfig != nil {
+		if cfg.AccessLogConfig.Path != nil {
+			af, err := openWritableFile(*cfg.AccessLogConfig.Path)
 			if err != nil {
 				errorLogger.Fatal(err)
 			}
 			defer af.Close()
-			accessLogger, err = accesslogger.New(*config.AccessLogConfig.Format, af, config.AccessLogConfig.Fields)
+			accessLogger, err = accesslogger.New(*cfg.AccessLogConfig.Format, af, cfg.AccessLogConfig.Fields)
 			if err != nil {
 				errorLogger.Fatal(err)
 			}
 		} else {
-			accessLogger, err = accesslogger.New(*config.AccessLogConfig.Format, os.Stdout, config.AccessLogConfig.Fields)
+			accessLogger, err = accesslogger.New(*cfg.AccessLogConfig.Format, os.Stdout, cfg.AccessLogConfig.Fields)
 			if err != nil {
 				errorLogger.Fatal(err)
 			}
 		}
 	}
 
-	for _, e := range config.ExporterConfigs {
+	for _, e := range cfg.ExporterConfigs {
 		proxy, err := server.NewExporterProxy(&e, accessLogger, errorLogger)
 		if err != nil {
 			errorLogger.Fatal(err)
@@ -91,7 +91,7 @@ func start(config *config.Config) {
 		http.Handle(*proxy.ServePath, proxy)
 	}
 
-	lsn, err := listener.Listen(*config.Listen)
+	lsn, err := listener.Listen(*cfg.Listen)
 	if err != nil {
 		errorLogger.Fatal(err)
 	}
@@ -101,7 +101,12 @@ func start(config *config.Config) {
 		Handler: http.DefaultServeMux,
 	}
 
-	err = server.ServeHTTPAndHandleSignal(lsn, *srv, *config.ShutDownTimeout, *config.TLSConfig)
+	var tlsConfig config.TLSConfig
+	if cfg.TLSConfig != nil {
+		tlsConfig = *cfg.TLSConfig
+	}
+
+	err = server.ServeHTTPAndHandleSignal(lsn, *srv, *cfg.ShutDownTimeout, tlsConfig)
 	if err != nil {
 		errorLogger.Fatal(err)
 	}
