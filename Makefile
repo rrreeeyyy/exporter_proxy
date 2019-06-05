@@ -28,6 +28,3 @@ release: buildx
 	git push origin v$(VERSION)
 	ghr v$(VERSION) bin/v$(VERSION)/
 
-dep:
-	dep ensure
-	dep status
