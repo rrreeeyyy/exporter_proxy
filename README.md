@@ -64,9 +64,3 @@ scrape_configs:
 
 - Standard example: https://github.com/rrreeeyyy/exporter_proxy/blob/master/config.example.yml
 - For docker example: https://github.com/rrreeeyyy/exporter_proxy/blob/master/example/config/config.yml
-
-## Development
-
-### Dependencies
-
-Dependencies are managed by [dep](https://github.com/golang/dep)
