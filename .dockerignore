@@ -1,2 +1,4 @@
-bin/
-test/
+.editorconfig
+LICENSE
+NOTICE
+README.md
