@@ -1,4 +1,4 @@
-listen: "SERVER_STARTER:0.0.0.0:9099"
+listen: "0.0.0.0:9099"
 
 access_log:
   path: "/dev/stdout"
