@@ -18,7 +18,10 @@ vet:
 	go vet -v ${GOFILES_NOVENDOR}
 
 test:
-	go test -v ${GOFILES_NOVENDOR}
+	go test
+
+test-short:
+	go test -short
 
 fmt:
 	gofmt -l -w ${GOFILES_NOVENDOR}
