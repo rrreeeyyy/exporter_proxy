@@ -1,10 +1,12 @@
 package server
 
 import (
+	"crypto/tls"
 	"fmt"
 	"github.com/rrreeeyyy/exporter_proxy/accesslogger"
 	"github.com/rrreeeyyy/exporter_proxy/config"
 	"log"
+	"net"
 	"net/http"
 	"net/http/httputil"
 	"net/url"
@@ -23,7 +25,33 @@ func NewExporterProxy(c *config.ExporterConfig, al accesslogger.AccessLogger, el
 	if err != nil {
 		return nil, err
 	}
-	p := &ExporterProxy{c.Path, target, al, &httputil.ReverseProxy{ErrorLog: el, Director: createDirector(target)}}
+
+	tr := &http.Transport{
+		Proxy: http.ProxyFromEnvironment,
+		DialContext: (&net.Dialer{
+			Timeout:   30 * time.Second,
+			KeepAlive: 30 * time.Second,
+			DualStack: true,
+		}).DialContext,
+		MaxIdleConns:          100,
+		IdleConnTimeout:       90 * time.Second,
+		TLSHandshakeTimeout:   10 * time.Second,
+		ExpectContinueTimeout: 1 * time.Second,
+	}
+	if c.InsecureSkipVerify != nil && *c.InsecureSkipVerify == true {
+		tr.TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
+	}
+
+	p := &ExporterProxy{
+		c.Path,
+		target,
+		al,
+		&httputil.ReverseProxy{
+			ErrorLog:  el,
+			Director:  createDirector(target),
+			Transport: tr,
+		},
+	}
 	return p, nil
 }
 

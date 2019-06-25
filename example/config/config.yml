@@ -15,3 +15,7 @@ exporters:
   cadvisor:
     url: "http://cadvisor:8080/metrics"
     path: "/cadvisor/metrics"
+  badssl:
+    url: "https://self-signed.badssl.com"
+    path: "/badssl/metrics"
+    insecure_skip_verify: true
