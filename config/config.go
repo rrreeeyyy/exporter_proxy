@@ -39,6 +39,7 @@ type ErrorLogConfig struct {
 type ExporterConfig struct {
 	URL  *string `yaml:"url" validate:"required"`
 	Path *string `yaml:"path" validate:"required"`
+	InsecureSkipVerify *bool `yaml:"insecure_skip_verify"`
 }
 
 func LoadConfigFromYAML(path string) (*Config, error) {

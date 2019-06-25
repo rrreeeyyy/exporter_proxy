@@ -11,7 +11,7 @@ services:
     volumes:
       - ./config/:/etc/exporter_proxy/:ro
     command: -config /etc/exporter_proxy/config.yml
-    entrypoint: start_server --port 0.0.0.0:9099 -- go-wrapper run
+    entrypoint: go-wrapper run
   node_exporter:
     image: prom/node-exporter
   cadvisor:

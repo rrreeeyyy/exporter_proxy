@@ -30,6 +30,10 @@ exporters:
   mysqld_exporter:
     path: "/mysqld_exporter/metrics"
     url: "http://127.0.0.1:9104/metrics"
+  self_signed_example:
+    path: "/badssl/example"
+    url: "https://self-signed.badssl.com"
+    insecure_skip_verify: true # Disable validation of the server certificate.
 
 
 # shutdown_timeout: timeout for shutting down HTTP server (optional)
