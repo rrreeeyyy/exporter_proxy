@@ -1,6 +1,7 @@
 COMMIT = $(shell git describe --always)
 VERSION = $(shell grep Version cli/version.go | sed -E 's/.*"(.+)"$$/\1/')
 GOFILES_NOVENDOR = $(shell find . -type f -name '*.go' -not -path "./vendor/*")
+GOXOSARCH ?= "darwin/amd64 linux/amd64 linux/arm64 windows/amd64"
 
 default: build
 
@@ -9,7 +10,7 @@ build:
 	go build -ldflags "-X main.GitCommit=$(COMMIT)" -o bin/exporter_proxy .
 
 buildx:
-	gox -ldflags "-X main.GitCommit=$(COMMIT)" -output "bin/v$(VERSION)/{{.Dir}}_{{.OS}}_{{.Arch}}" -arch "amd64" -os "linux darwin" .
+	gox -ldflags "-X main.GitCommit=$(COMMIT)" -output "bin/v$(VERSION)/{{.Dir}}_{{.OS}}_{{.Arch}}" -osarch $(GOXOSARCH) .
 
 lint:
 	golint ${GOFILES_NOVENDOR}
