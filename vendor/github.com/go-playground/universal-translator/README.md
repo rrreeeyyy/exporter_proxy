@@ -1,12 +1,9 @@
 ## universal-translator
-<img align="right" src="https://raw.githubusercontent.com/go-playground/universal-translator/master/logo.png">
-![Project status](https://img.shields.io/badge/version-0.16.0-green.svg)
-[![Build Status](https://semaphoreci.com/api/v1/joeybloggs/universal-translator/branches/master/badge.svg)](https://semaphoreci.com/joeybloggs/universal-translator)
+<img align="right" src="https://raw.githubusercontent.com/go-playground/universal-translator/master/logo.png">![Project status](https://img.shields.io/badge/version-0.18.1-green.svg)
 [![Coverage Status](https://coveralls.io/repos/github/go-playground/universal-translator/badge.svg)](https://coveralls.io/github/go-playground/universal-translator)
 [![Go Report Card](https://goreportcard.com/badge/github.com/go-playground/universal-translator)](https://goreportcard.com/report/github.com/go-playground/universal-translator)
 [![GoDoc](https://godoc.org/github.com/go-playground/universal-translator?status.svg)](https://godoc.org/github.com/go-playground/universal-translator)
 ![License](https://img.shields.io/dub/l/vibe-d.svg)
-[![Gitter](https://badges.gitter.im/go-playground/universal-translator.svg)](https://gitter.im/go-playground/universal-translator?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
 Universal Translator is an i18n Translator for Go/Golang using CLDR data + pluralization rules
 
@@ -19,7 +16,7 @@ use in your applications.
 
 Features
 --------
-- [x] Rules generated from the [CLDR](http://cldr.unicode.org/index/downloads) data, v30.0.3
+- [x] Rules generated from the [CLDR](http://cldr.unicode.org/index/downloads) data, v36.0.1
 - [x] Contains Cardinal, Ordinal and Range Plural Rules
 - [x] Contains Month, Weekday and Timezone translations built in
 - [x] Contains Date & Time formatting functions
@@ -46,21 +43,21 @@ Please see https://godoc.org/github.com/go-playground/universal-translator for u
 
 ##### Examples:
 
-- [Basic](https://github.com/go-playground/universal-translator/tree/master/examples/basic)
-- [Full - no files](https://github.com/go-playground/universal-translator/tree/master/examples/full-no-files)
-- [Full - with files](https://github.com/go-playground/universal-translator/tree/master/examples/full-with-files)
+- [Basic](https://github.com/go-playground/universal-translator/tree/master/_examples/basic)
+- [Full - no files](https://github.com/go-playground/universal-translator/tree/master/_examples/full-no-files)
+- [Full - with files](https://github.com/go-playground/universal-translator/tree/master/_examples/full-with-files)
 
 File formatting
 --------------
-All types, Plain substitution, Cardinal, Ordinal and Range translations can all be contained withing the same file(s);
+All types, Plain substitution, Cardinal, Ordinal and Range translations can all be contained within the same file(s);
 they are only separated for easy viewing.
 
 ##### Examples:
 
-- [Formats](https://github.com/go-playground/universal-translator/tree/master/examples/file-formats)
+- [Formats](https://github.com/go-playground/universal-translator/tree/master/_examples/file-formats)
 
 ##### Basic Makeup
-NOTE: not all fields are needed for all translation types, see [examples](https://github.com/go-playground/universal-translator/tree/master/examples/file-formats)
+NOTE: not all fields are needed for all translation types, see [examples](https://github.com/go-playground/universal-translator/tree/master/_examples/file-formats)
 ```json
 {
     "locale": "en",

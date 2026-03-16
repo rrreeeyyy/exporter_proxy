@@ -12,7 +12,7 @@ import (
 	"github.com/rrreeeyyy/exporter_proxy/config"
 )
 
-func ServeHTTPAndHandleSignal(listener net.Listener, server http.Server, timeout time.Duration, tlsconfig config.TLSConfig) error {
+func ServeHTTPAndHandleSignal(listener net.Listener, server *http.Server, timeout time.Duration, tlsconfig config.TLSConfig) error {
 	if tlsconfig.CertFile != nil && tlsconfig.KeyFile != nil {
 		go func() {
 			server.ServeTLS(listener, *tlsconfig.CertFile, *tlsconfig.KeyFile)

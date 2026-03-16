@@ -1,11 +1,11 @@
 package config
 
 import (
-	"io/ioutil"
+	"os"
 	"time"
 
-	"gopkg.in/go-playground/validator.v9"
-	"gopkg.in/yaml.v2"
+	"github.com/go-playground/validator/v10"
+	"gopkg.in/yaml.v3"
 )
 
 const (
@@ -33,7 +33,7 @@ type AccessLogConfig struct {
 }
 
 type ErrorLogConfig struct {
-	Path *string `yaml:"path" validate"required"`
+	Path *string `yaml:"path" validate:"required"`
 }
 
 type ExporterConfig struct {
@@ -43,7 +43,7 @@ type ExporterConfig struct {
 }
 
 func LoadConfigFromYAML(path string) (*Config, error) {
-	data, err := ioutil.ReadFile(path)
+	data, err := os.ReadFile(path)
 	if err != nil {
 		return nil, err
 	}

@@ -106,7 +106,7 @@ func start(cfg *config.Config) {
 		tlsConfig = *cfg.TLSConfig
 	}
 
-	err = server.ServeHTTPAndHandleSignal(lsn, *srv, *cfg.ShutDownTimeout, tlsConfig)
+	err = server.ServeHTTPAndHandleSignal(lsn, srv, *cfg.ShutDownTimeout, tlsConfig)
 	if err != nil {
 		errorLogger.Fatal(err)
 	}

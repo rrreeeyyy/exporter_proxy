@@ -1,11 +1,9 @@
-FROM golang:1.12 as builder
-ENV GO111MODULE=on
+FROM golang:1.26 AS builder
 
 WORKDIR /go/src/app
 COPY . .
 
-RUN go get -d -v ./...
-RUN go install -v ./...
+RUN go mod download
 RUN CGO_ENABLED=0 GOOS=linux make
 
 FROM alpine:latest

@@ -5,7 +5,7 @@ import (
 	"net"
 	"strings"
 
-	serverstarter "github.com/lestrrat/go-server-starter/listener"
+	serverstarter "github.com/lestrrat-go/server-starter/listener"
 )
 
 // Listen creates a listener from server_starter or new TCP sock

@@ -5,23 +5,13 @@ import (
 )
 
 func wrapLogResponseWriter(rw http.ResponseWriter) logResponseWriterIF {
-	var wrapped logResponseWriterIF
-	wrapped = &logResponseWriter{w: rw}
-	if cn, ok := rw.(http.CloseNotifier); ok {
-		wrapped = &closeNotifierLogResponseWriter{wrapped, cn}
-	}
-	return wrapped
+	return &logResponseWriter{w: rw}
 }
 
 type logResponseWriterIF interface {
 	http.ResponseWriter
 	Status() int
 	Size() int
-}
-
-type closeNotifierLogResponseWriter struct {
-	logResponseWriterIF
-	http.CloseNotifier
 }
 
 type logResponseWriter struct {
