@@ -22,8 +22,14 @@ access_log:
 error_log:
   path: "./error.log" # default: os.Stderr
 
-# exporters: The path of exporter_proxy and the URL of the destination exporter
+# exporters: The path of exporter_proxy and the URL of the destination exporter.
+#   include: optional directory (or list of directories) whose .yml/.yaml files
+#   are merged into this section. Relative paths are resolved from the main
+#   config file directory. Later sources win on duplicate exporter names:
+#   included files (sorted by name), then later include directories, then inline
+#   entries in the main config.
 exporters:
+  include: /etc/exporter_proxy/exporters.d
   node_exporter:
     path: "/node_exporter/metrics"
     url: "http://127.0.0.1:9100/metrics"

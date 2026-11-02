@@ -9,12 +9,10 @@ error_log:
   path: "/dev/stderr"
 
 exporters:
+  include: exporters.d
   node_exporter:
     url: "http://node_exporter:9100/metrics"
     path: "/node_exporter/metrics"
-  cadvisor:
-    url: "http://cadvisor:8080/metrics"
-    path: "/cadvisor/metrics"
   badssl:
     url: "https://self-signed.badssl.com"
     path: "/badssl/metrics"

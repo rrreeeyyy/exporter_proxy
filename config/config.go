@@ -2,6 +2,7 @@ package config
 
 import (
 	"os"
+	"path/filepath"
 	"time"
 
 	"github.com/go-playground/validator/v10"
@@ -16,7 +17,7 @@ type Config struct {
 	Listen          *string                   `yaml:"listen" validate:"required"`
 	TLSConfig       *TLSConfig                `yaml:"tls"`
 	ShutDownTimeout *time.Duration            `yaml:"shutdown_timeout"`
-	ExporterConfigs map[string]ExporterConfig `yaml:"exporters" validate:"required,dive"`
+	ExporterConfigs map[string]ExporterConfig `yaml:"exporters" validate:"required,min=1,dive"`
 	AccessLogConfig *AccessLogConfig          `yaml:"access_log"`
 	ErrorLogConfig  *ErrorLogConfig           `yaml:"error_log"`
 }
@@ -50,13 +51,34 @@ func LoadConfigFromYAML(path string) (*Config, error) {
 
 	sdt, _ := time.ParseDuration(DefaultShutDownTimeout)
 
-	c := &Config{ShutDownTimeout: &sdt}
-	err = yaml.Unmarshal(data, c)
+	var raw struct {
+		Listen          *string          `yaml:"listen"`
+		TLSConfig       *TLSConfig       `yaml:"tls"`
+		ShutDownTimeout *time.Duration   `yaml:"shutdown_timeout"`
+		Exporters       exportersSection `yaml:"exporters"`
+		AccessLogConfig *AccessLogConfig `yaml:"access_log"`
+		ErrorLogConfig  *ErrorLogConfig  `yaml:"error_log"`
+	}
+	raw.ShutDownTimeout = &sdt
+
+	err = yaml.Unmarshal(data, &raw)
 	if err != nil {
 		return nil, err
 	}
 
-	return c, nil
+	err = raw.Exporters.Resolve(filepath.Dir(path))
+	if err != nil {
+		return nil, err
+	}
+
+	return &Config{
+		Listen:          raw.Listen,
+		TLSConfig:       raw.TLSConfig,
+		ShutDownTimeout: raw.ShutDownTimeout,
+		ExporterConfigs: raw.Exporters.items,
+		AccessLogConfig: raw.AccessLogConfig,
+		ErrorLogConfig:  raw.ErrorLogConfig,
+	}, nil
 }
 
 func (c *Config) Validate() error {

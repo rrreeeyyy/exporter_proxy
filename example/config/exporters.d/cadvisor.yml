@@ -1,0 +1,3 @@
+cadvisor:
+  url: "http://cadvisor:8080/metrics"
+  path: "/cadvisor/metrics"
